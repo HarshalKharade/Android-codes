@@ -1,0 +1,98 @@
+// xml File
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <ListView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/listview1"/>
+
+
+   </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+// Java Code 
+
+package com.example.contextmenu;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity
+{
+    ListView listview1;
+    String contacts [] = {"Ajay","Amar","Baba","Chetan","Dipak","Pooja","Raju","Sachin","Rohit"};
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        listview1 = findViewById(R.id.listview1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,contacts);
+        listview1.setAdapter(adapter);
+
+        registerForContextMenu(listview1);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.setHeaderTitle("Select the Action");
+        menu.add("Call");
+        menu.add("SMS");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item)
+    {
+       // return super.onContextItemSelected(item);
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        int itemPosition = info.position;
+
+        if (item.getTitle() == "Call")
+        {
+            Toast.makeText(this, "Call to "+contacts[itemPosition], Toast.LENGTH_SHORT).show();
+        }
+
+        if (item.getTitle() == "SMS")
+        {
+            Toast.makeText(this, "SMS to "+contacts[itemPosition], Toast.LENGTH_SHORT).show();
+        }
+
+        else
+            return false;
+
+        return true;
+    }
+}
